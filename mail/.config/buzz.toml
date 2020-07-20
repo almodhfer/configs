@@ -1,0 +1,5 @@
+[tspio]
+server = "imap.fastmail.com"
+port = 993
+username = "jon@eml.cc"
+pwcmd = "pass sec/mutt_fastmail"
