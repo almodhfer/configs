@@ -17,10 +17,12 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-fugitive'
 Plug 'Chiel92/vim-autoformat'
+Plug 'kiteco/vim-plugin'
+Plug 'jmcantrell/vim-virtualenv'
 
 " GUI enhancements
 "Plug 'itchyny/lightline.vim'
-"Plug 'machakann/vim-highlightedyank'
+Plug 'machakann/vim-highlightedyank'
 "Plug 'andymass/vim-matchup'
 
 " Fuzzy finder
@@ -29,7 +31,6 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 " Semantic language support
-"Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'preservim/nerdtree'
 
 
@@ -39,6 +40,11 @@ Plug 'stephpy/vim-yaml'
 Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'dense-analysis/ale'
+Plug 'vim-syntastic/syntastic'
+Plug 'bfredl/nvim-ipy'
+Plug 'szymonmaszke/vimpyter' "read ipyn
+
+
 
 
 "Plug 'fatih/vim-go'
@@ -54,6 +60,7 @@ else
 endif
 Plug 'deoplete-plugins/deoplete-jedi'
 Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
+Plug 'zchee/deoplete-clang'
 
 Plug 'chriskempson/base16-vim'
 Plug 'lervag/vimtex'
@@ -62,6 +69,8 @@ Plug 'matze/vim-tex-fold'
     " other plugins...
 
 "Plug 'vim-latex/vim-latex'
+
+Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 
 
 call plug#end()
@@ -162,25 +171,6 @@ let $RUST_SRC_PATH = systemlist("rustc --print sysroot")[0] . "/lib/rustlib/src/
 set cmdheight=2
 " You will have bad experience for diagnostic messages when it's default 4000.
 set updatetime=300
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-" Use <c-.> to trigger completion.
-inoremap <silent><expr> <c-.> coc#refresh()
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
- inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-"" Or use `complete_info` if your vim support it, like:
-inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-
 " Golang
 let g:go_play_open_browser = 0
 let g:go_fmt_fail_silently = 1
@@ -379,22 +369,6 @@ nnoremap j gj
 nnoremap k gk
 
 " 'Smart' nevigation
-nmap <silent> E <Plug>(coc-diagnostic-prev)
-nmap <silent> W <Plug>(coc-diagnostic-next)
-nmap <silent> <leader>l <Plug>(coc-diagnostic-info)
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
 " nmap <silent> F <Plug>(ale_lint)
 " nmap <silent> <C-l> <Plug>(ale_detail)
 " nmap <silent> <C-g> :close<cr>
@@ -453,21 +427,52 @@ autocmd BufRead *.xlsx.axlsx set filetype=ruby
 
 " *** Deoplete *** 
 " # Python
- let g:deoplete#enable_at_startup = 1
- let g:python3_host_prog = expand("~/env/bin/python")
- let g:deoplete#auto_complete=1
+ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+ let g:deoplete#enable_at_startup = 0
+ let g:python3_host_prog = expand("/usr/bin/python3")
+ let g:deoplete#auto_complete=0
  let g:deoplete#sources#jedi#enable_typeinfo = 0 "gotta go fast
- autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-
 " # PHP 
 let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
 let g:deoplete#ignore_sources.php = ['omni']
+
+" # c++
+
+let g:deoplete#sources#clang#libclang_path='/usr/lib/llvm-6.0/lib/libclang.so'
+let g:deoplete#sources#clang#clang_header='/usr/lib/clang'
+
+" Kite
+let g:kite_supported_languages = ['python', 'javascript']
+
+
+
+
+
+ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 let g:tex_flavor  = 'latex'
 let g:tex_conceal = ''
 let g:vimtex_fold_manual = 1
 let g:vimtex_latexmk_continuous = 0
 let g:vimtex_compiler_progname = 'nvr'
+
+
+let g:virtualenv_directory = '/home/almodhfer'
+let g:ale_enabled = 0
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0 
+let g:syntastic_python_checkers = ['pylint','mypy']
+
+" Always use the same virtualenv for vim, regardless of what Python
+" environment is loaded in the shell from which vim is launched
+
+
 
 " NCM2
 "augroup NCM2
