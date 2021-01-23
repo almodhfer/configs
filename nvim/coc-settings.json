@@ -1,4 +1,11 @@
 {
-  "rust-analyzer.cargo-watch.enable": false,
-  "rust-analyzer.serverPath": "/home/jon/.cargo-target/release/rust-analyzer"
+  "python.linting.mypyEnabled": true,
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.pylintArgs": [
+    "--max-line-length=88"
+  ],
+  "python.linting.mypyPath": "mypy",
+  "python.analysis.autoImportCompletions": true,
+  "python.formatting.provider": "black"
 }
