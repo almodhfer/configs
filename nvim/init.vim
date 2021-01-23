@@ -317,7 +317,7 @@ tnoremap <C-c> <Esc>
 vnoremap <C-h> :nohlsearch<cr>
 nnoremap <C-h> :nohlsearch<cr>
 
-inoremap <leader>v <C-v>
+"inoremap <leader>v <C-v>
 nnoremap <leader>v <C-v>
 " Suspend with Ctrl+f
 "inoremap <C-f> :sus<cr>
@@ -643,7 +643,8 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Using CocList
 " Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+nnoremap <silent> ,a  :<C-u>CocList diagnostics<cr>
+nnoremap <silent> <space>a  :<C-u>CocDiagnostics<cr>
 " Manage extensions
 nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " Show commands
@@ -666,4 +667,4 @@ highlight SpelunkerSpellBad cterm=underline ctermfg=247 gui=underline guifg=#9e9
 highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underline guifg=NONE
 let g:enable_spelunker_vim_on_readonly = 1
 
-let g:auto_save = 1  " enable AutoSave on Vim startup
+let g:auto_save = 0  " enable AutoSave on Vim startup
